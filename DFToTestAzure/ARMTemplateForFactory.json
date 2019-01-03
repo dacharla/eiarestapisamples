@@ -51,7 +51,7 @@
 			"properties": {
 				"activities": [
 					{
-						"name": "CopyEIAHTTPToBLOB",
+						"name": "CopyEIAHTTPToBLOB_GITTEsting",
 						"type": "Copy",
 						"dependsOn": [],
 						"policy": {
