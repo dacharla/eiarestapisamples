@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "CopyEIAHTTPToBLOB",
+				"name": "CopyEIAHTTPToBLOB_GITTEsting",
 				"type": "Copy",
 				"policy": {
 					"timeout": "7.00:00:00",
