@@ -1,0 +1,98 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory Name",
+			"defaultValue": "dftotestazure"
+		},
+		"LinkToBlobToTestAzure_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'LinkToBlobToTestAzure'"
+		},
+		"LinkToDBSQLServer_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'LinkToDBSQLServer'"
+		},
+		"SamplesSQLDBConnection_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'SamplesSQLDBConnection'"
+		},
+		"SecondBlob_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'SecondBlob'"
+		},
+		"DSBLOBForEIAHTTP_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": "PET.*.M"
+		},
+		"DSBLOBForEIAHTTP_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "naturalgas"
+		},
+		"LinkToEIAHTTP_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "http://api.eia.gov/series/?api_key=b686e04fb4b5fe46474bc64b3118413c&series_id=PET.M_EPL2_FPF_R2A_MBBL.M"
+		},
+		"MyFirstTrigger_properties_pipeline3_parameters_blobname": {
+			"type": "string",
+			"defaultValue": "test"
+		},
+		"containerUri": {
+			"type": "string",
+			"metadata": "URI to storage account containing linked ARM templates"
+		},
+		"containerSasToken": {
+			"type": "string",
+			"metadata": "Sas Token to storage account containing linked ARM templates"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "ArmTemplate_0",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_0.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"LinkToBlobToTestAzure_connectionString": {
+						"value": "[parameters('LinkToBlobToTestAzure_connectionString')]"
+					},
+					"LinkToDBSQLServer_connectionString": {
+						"value": "[parameters('LinkToDBSQLServer_connectionString')]"
+					},
+					"SamplesSQLDBConnection_connectionString": {
+						"value": "[parameters('SamplesSQLDBConnection_connectionString')]"
+					},
+					"SecondBlob_connectionString": {
+						"value": "[parameters('SecondBlob_connectionString')]"
+					},
+					"LinkToEIAHTTP_properties_typeProperties_url": {
+						"value": "[parameters('LinkToEIAHTTP_properties_typeProperties_url')]"
+					},
+					"DSBLOBForEIAHTTP_properties_typeProperties_fileName": {
+						"value": "[parameters('DSBLOBForEIAHTTP_properties_typeProperties_fileName')]"
+					},
+					"DSBLOBForEIAHTTP_properties_typeProperties_folderPath": {
+						"value": "[parameters('DSBLOBForEIAHTTP_properties_typeProperties_folderPath')]"
+					},
+					"MyFirstTrigger_properties_pipeline3_parameters_blobname": {
+						"value": "[parameters('MyFirstTrigger_properties_pipeline3_parameters_blobname')]"
+					}
+				}
+			},
+			"dependsOn": []
+		}
+	]
+}

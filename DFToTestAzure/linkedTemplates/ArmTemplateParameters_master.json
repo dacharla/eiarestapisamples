@@ -1,0 +1,33 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "dftotestazure"
+		},
+		"LinkToBlobToTestAzure_connectionString": {
+			"value": ""
+		},
+		"LinkToDBSQLServer_connectionString": {
+			"value": ""
+		},
+		"SamplesSQLDBConnection_connectionString": {
+			"value": ""
+		},
+		"SecondBlob_connectionString": {
+			"value": ""
+		},
+		"DSBLOBForEIAHTTP_properties_typeProperties_fileName": {
+			"value": "PET.*.M"
+		},
+		"DSBLOBForEIAHTTP_properties_typeProperties_folderPath": {
+			"value": "naturalgas"
+		},
+		"LinkToEIAHTTP_properties_typeProperties_url": {
+			"value": "http://api.eia.gov/series/?api_key=b686e04fb4b5fe46474bc64b3118413c&series_id=PET.M_EPL2_FPF_R2A_MBBL.M"
+		},
+		"MyFirstTrigger_properties_pipeline3_parameters_blobname": {
+			"value": "test"
+		}
+	}
+}

@@ -1,0 +1,537 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory Name",
+			"defaultValue": "dftotestazure"
+		},
+		"LinkToBlobToTestAzure_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'LinkToBlobToTestAzure'"
+		},
+		"LinkToDBSQLServer_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'LinkToDBSQLServer'"
+		},
+		"SamplesSQLDBConnection_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'SamplesSQLDBConnection'"
+		},
+		"SecondBlob_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'SecondBlob'"
+		},
+		"LinkToEIAHTTP_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "http://api.eia.gov/series/?api_key=b686e04fb4b5fe46474bc64b3118413c&series_id=PET.M_EPL2_FPF_R2A_MBBL.M"
+		},
+		"DSBLOBForEIAHTTP_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": "PET.*.M"
+		},
+		"DSBLOBForEIAHTTP_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "naturalgas"
+		},
+		"MyFirstTrigger_properties_pipeline3_parameters_blobname": {
+			"type": "string",
+			"defaultValue": "test"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/pipeline1')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Web1",
+						"type": "WebActivity",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"url": "https://prod-05.westus2.logic.azure.com:443/workflows/ac3ef742c5244f069879414d4ea8ae79/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=XyBhr9K5_GZ4eZt3XUl0EJMrDk492moHr4Fi-7SlXqw",
+							"method": "POST",
+							"headers": {},
+							"body": {
+								"value": "@pipeline().parameters.BlobName",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "Web2",
+						"type": "WebActivity",
+						"dependsOn": [
+							{
+								"activity": "Web1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"url": "https://prod-24.westus2.logic.azure.com:443/workflows/289f0076a3a24b11aa233a75301b5292/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=yJaxuJFLMHl-ZVjlWUw_3dcutdpfjcjxxMvzBnzKeNA",
+							"method": "POST",
+							"headers": {},
+							"body": {
+								"value": "@pipeline().parameters.BlobName",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"parameters": {
+					"BlobName": {
+						"type": "String",
+						"defaultValue": {
+							"blobname": "/test"
+						}
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pipeline2')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Web1",
+						"type": "WebActivity",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"url": "https://prod-24.westus2.logic.azure.com:443/workflows/289f0076a3a24b11aa233a75301b5292/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=yJaxuJFLMHl-ZVjlWUw_3dcutdpfjcjxxMvzBnzKeNA",
+							"method": "POST",
+							"headers": {},
+							"body": {
+								"value": "@pipeline().parameters.blobname",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"parameters": {
+					"blobname": {
+						"type": "Object",
+						"defaultValue": {
+							"blobname": "/test"
+						}
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pipeline3')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Web1",
+						"type": "WebActivity",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"url": "https://prod-24.westus2.logic.azure.com:443/workflows/289f0076a3a24b11aa233a75301b5292/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=yJaxuJFLMHl-ZVjlWUw_3dcutdpfjcjxxMvzBnzKeNA",
+							"method": "POST",
+							"headers": {},
+							"body": {
+								"value": "@pipeline().parameters.blobname",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"parameters": {
+					"blobname": {
+						"type": "Object",
+						"defaultValue": {
+							"blobname": "test1"
+						}
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/LinkToBlobToTestAzure')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": "[parameters('LinkToBlobToTestAzure_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/LinkToDBSQLServer')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "SqlServer",
+				"typeProperties": {
+					"connectionString": "[parameters('LinkToDBSQLServer_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/LinkToEIAHTTP')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "HttpServer",
+				"typeProperties": {
+					"url": "[parameters('LinkToEIAHTTP_properties_typeProperties_url')]",
+					"enableServerCertificateValidation": false,
+					"authenticationType": "Anonymous"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SamplesSQLDBConnection')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"connectionString": "[parameters('SamplesSQLDBConnection_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SecondBlob')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": "[parameters('SecondBlob_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DSBLOBForEIAHTTP')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LinkToBlobToTestAzure",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureBlob",
+				"structure": [
+					{
+						"name": "series",
+						"type": "String"
+					},
+					{
+						"name": "request.command",
+						"type": "String"
+					},
+					{
+						"name": "request.series_id",
+						"type": "String"
+					}
+				],
+				"typeProperties": {
+					"format": {
+						"type": "JsonFormat",
+						"filePattern": "setOfObjects"
+					},
+					"fileName": "[parameters('DSBLOBForEIAHTTP_properties_typeProperties_fileName')]",
+					"folderPath": "[parameters('DSBLOBForEIAHTTP_properties_typeProperties_folderPath')]"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LinkToBlobToTestAzure')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DSHTTPEIAJSON')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LinkToEIAHTTP",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"api_key": {
+						"type": "String"
+					},
+					"series_id": {
+						"type": "String"
+					}
+				},
+				"annotations": [],
+				"type": "HttpFile",
+				"structure": [
+					{
+						"name": "series",
+						"type": "String"
+					},
+					{
+						"name": "request.command",
+						"type": "String"
+					},
+					{
+						"name": "request.series_id",
+						"type": "String"
+					}
+				],
+				"typeProperties": {
+					"format": {
+						"type": "JsonFormat",
+						"filePattern": "setOfObjects",
+						"jsonPathDefinition": {
+							"series": "$.['series']",
+							"request.command": "$.['request']['command']",
+							"request.series_id": "$.['request']['series_id']"
+						}
+					},
+					"relativeUrl": "",
+					"requestMethod": "Get",
+					"additionalHeaders": "",
+					"requestBody": ""
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LinkToEIAHTTP')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/LinkDBServer')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LinkToDBSQLServer",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"structure": [
+					{
+						"name": "json_string",
+						"type": "String"
+					}
+				],
+				"typeProperties": {
+					"tableName": "[concat('[', 'dbo].[StageJSONS]')]"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LinkToDBSQLServer')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/MyFirstTrigger')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "pipeline3",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"blobname": "[parameters('MyFirstTrigger_properties_pipeline3_parameters_blobname')]"
+						}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Day",
+						"interval": 1,
+						"startTime": "2018-12-18T23:46:00Z",
+						"timeZone": "UTC",
+						"schedule": {
+							"minutes": [
+								5
+							],
+							"hours": [
+								0
+							]
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/pipeline3')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ACopyEIAHTTPToBLOBForEIAHTTP')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "CopyEIAHTTPToBLOB",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "HttpSource",
+								"httpRequestTimeout": "00:01:40"
+							},
+							"sink": {
+								"type": "BlobSink"
+							},
+							"enableStaging": false,
+							"dataIntegrationUnits": 0
+						},
+						"inputs": [
+							{
+								"referenceName": "DSHTTPEIAJSON",
+								"type": "DatasetReference",
+								"parameters": {
+									"api_key": "b686e04fb4b5fe46474bc64b3118413c",
+									"series_id": "PET.M_EPL2_FPF_R2A_MBBL.M"
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "DSBLOBForEIAHTTP",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/DSHTTPEIAJSON')]",
+				"[concat(variables('factoryId'), '/datasets/DSBLOBForEIAHTTP')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/BCopyEIABLOBsToStageJSONS')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "CopyBLOBToStageTBL",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "BlobSource",
+								"recursive": true
+							},
+							"sink": {
+								"type": "SqlSink",
+								"writeBatchSize": 10000
+							},
+							"enableStaging": false,
+							"dataIntegrationUnits": 0,
+							"translator": {
+								"type": "TabularTranslator",
+								"columnMappings": {
+									"series": "json_string"
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "DSBLOBForEIAHTTP",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "LinkDBServer",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/DSBLOBForEIAHTTP')]",
+				"[concat(variables('factoryId'), '/datasets/LinkDBServer')]"
+			]
+		}
+	]
+}
