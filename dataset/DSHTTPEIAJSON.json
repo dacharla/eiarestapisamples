@@ -1,0 +1,48 @@
+{
+	"name": "DSHTTPEIAJSON",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LinkToEIAHTTP",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"api_key": {
+				"type": "String"
+			},
+			"series_id": {
+				"type": "String"
+			}
+		},
+		"type": "HttpFile",
+		"structure": [
+			{
+				"name": "series",
+				"type": "String"
+			},
+			{
+				"name": "request.command",
+				"type": "String"
+			},
+			{
+				"name": "request.series_id",
+				"type": "String"
+			}
+		],
+		"typeProperties": {
+			"format": {
+				"type": "JsonFormat",
+				"filePattern": "setOfObjects",
+				"jsonPathDefinition": {
+					"series": "$.['series']",
+					"request.command": "$.['request']['command']",
+					"request.series_id": "$.['request']['series_id']"
+				}
+			},
+			"relativeUrl": "",
+			"requestMethod": "Get",
+			"additionalHeaders": "",
+			"requestBody": ""
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

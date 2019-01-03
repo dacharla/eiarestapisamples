@@ -1,0 +1,62 @@
+{
+	"name": "pipeline1",
+	"properties": {
+		"activities": [
+			{
+				"name": "Web1",
+				"type": "WebActivity",
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"typeProperties": {
+					"url": "https://prod-05.westus2.logic.azure.com:443/workflows/ac3ef742c5244f069879414d4ea8ae79/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=XyBhr9K5_GZ4eZt3XUl0EJMrDk492moHr4Fi-7SlXqw",
+					"method": "POST",
+					"body": {
+						"value": "@pipeline().parameters.BlobName",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Web2",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "Web1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"typeProperties": {
+					"url": "https://prod-24.westus2.logic.azure.com:443/workflows/289f0076a3a24b11aa233a75301b5292/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=yJaxuJFLMHl-ZVjlWUw_3dcutdpfjcjxxMvzBnzKeNA",
+					"method": "POST",
+					"body": {
+						"value": "@pipeline().parameters.BlobName",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"parameters": {
+			"BlobName": {
+				"type": "String",
+				"defaultValue": {
+					"blobname": "/test"
+				}
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

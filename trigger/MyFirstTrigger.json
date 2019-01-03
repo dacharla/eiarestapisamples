@@ -1,0 +1,34 @@
+{
+	"name": "MyFirstTrigger",
+	"properties": {
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "pipeline3",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"blobname": "test"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Day",
+				"interval": 1,
+				"startTime": "2018-12-18T23:46:00Z",
+				"timeZone": "UTC",
+				"schedule": {
+					"minutes": [
+						5
+					],
+					"hours": [
+						0
+					]
+				}
+			}
+		}
+	}
+}

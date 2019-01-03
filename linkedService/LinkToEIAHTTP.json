@@ -1,0 +1,12 @@
+{
+	"name": "LinkToEIAHTTP",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"type": "HttpServer",
+		"typeProperties": {
+			"url": "http://api.eia.gov/series/?api_key=b686e04fb4b5fe46474bc64b3118413c&series_id=PET.M_EPL2_FPF_R2A_MBBL.M",
+			"enableServerCertificateValidation": false,
+			"authenticationType": "Anonymous"
+		}
+	}
+}

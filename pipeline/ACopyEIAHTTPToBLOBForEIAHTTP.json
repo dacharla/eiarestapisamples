@@ -1,0 +1,46 @@
+{
+	"name": "ACopyEIAHTTPToBLOBForEIAHTTP",
+	"properties": {
+		"activities": [
+			{
+				"name": "CopyEIAHTTPToBLOB",
+				"type": "Copy",
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"typeProperties": {
+					"source": {
+						"type": "HttpSource",
+						"httpRequestTimeout": "00:01:40"
+					},
+					"sink": {
+						"type": "BlobSink"
+					},
+					"enableStaging": false,
+					"dataIntegrationUnits": 0
+				},
+				"inputs": [
+					{
+						"referenceName": "DSHTTPEIAJSON",
+						"type": "DatasetReference",
+						"parameters": {
+							"api_key": "b686e04fb4b5fe46474bc64b3118413c",
+							"series_id": "PET.M_EPL2_FPF_R2A_MBBL.M"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DSBLOBForEIAHTTP",
+						"type": "DatasetReference"
+					}
+				]
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

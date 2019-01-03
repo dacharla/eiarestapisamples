@@ -1,0 +1,33 @@
+{
+	"name": "DSBLOBForEIAHTTP",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LinkToBlobToTestAzure",
+			"type": "LinkedServiceReference"
+		},
+		"type": "AzureBlob",
+		"structure": [
+			{
+				"name": "series",
+				"type": "String"
+			},
+			{
+				"name": "request.command",
+				"type": "String"
+			},
+			{
+				"name": "request.series_id",
+				"type": "String"
+			}
+		],
+		"typeProperties": {
+			"format": {
+				"type": "JsonFormat",
+				"filePattern": "setOfObjects"
+			},
+			"fileName": "PET.*.M",
+			"folderPath": "naturalgas"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

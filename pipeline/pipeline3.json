@@ -1,0 +1,35 @@
+{
+	"name": "pipeline3",
+	"properties": {
+		"activities": [
+			{
+				"name": "Web1",
+				"type": "WebActivity",
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"typeProperties": {
+					"url": "https://prod-24.westus2.logic.azure.com:443/workflows/289f0076a3a24b11aa233a75301b5292/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=yJaxuJFLMHl-ZVjlWUw_3dcutdpfjcjxxMvzBnzKeNA",
+					"method": "POST",
+					"body": {
+						"value": "@pipeline().parameters.blobname",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"parameters": {
+			"blobname": {
+				"type": "Object",
+				"defaultValue": {
+					"blobname": "test1"
+				}
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}
